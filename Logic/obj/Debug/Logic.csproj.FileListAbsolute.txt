@@ -1,0 +1,2 @@
+C:\Users\USER\source\repos\B21 Ex2 Ben 311454284 Dor 208392233\Logic\obj\Debug\Logic.csprojAssemblyReference.cache
+C:\Users\USER\source\repos\B21 Ex2 Ben 311454284 Dor 208392233\Logic\obj\Debug\Logic.csproj.CoreCompileInputs.cache
