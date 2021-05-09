@@ -4,15 +4,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace Logic
 {
-    class Player
+    public class Player
     {
-        private readonly char m_Sign;
-
-        public Player(char i_DesiredSign)
+        private readonly eBoardSigns m_Sign;
+        private int m_score;
+        public int Score
+        {
+            get;
+            set;
+        }
+        public Player(eBoardSigns i_DesiredSign)
         {
             this.m_Sign = i_DesiredSign;
+            Score = 0;
         }
     }
 }

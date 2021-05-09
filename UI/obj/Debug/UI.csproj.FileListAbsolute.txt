@@ -1,1 +1,13 @@
 C:\Users\USER\source\repos\B21 Ex2 Ben 311454284 Dor 208392233\UI\obj\Debug\UI.csproj.CoreCompileInputs.cache
+C:\Users\USER\Source\Repos\TicTacToeGame\UI\obj\Debug\UI.csprojAssemblyReference.cache
+C:\Users\USER\Source\Repos\TicTacToeGame\UI\obj\Debug\UI.csproj.CoreCompileInputs.cache
+C:\Users\USER\Source\Repos\TicTacToeGame\UI\bin\Debug\UI.exe.config
+C:\Users\USER\Source\Repos\TicTacToeGame\UI\bin\Debug\UI.exe
+C:\Users\USER\Source\Repos\TicTacToeGame\UI\bin\Debug\UI.pdb
+C:\Users\USER\Source\Repos\TicTacToeGame\UI\bin\Debug\Logic.dll
+C:\Users\USER\Source\Repos\TicTacToeGame\UI\bin\Debug\Logic.pdb
+C:\Users\USER\Source\Repos\TicTacToeGame\UI\bin\Debug\Logic.dll.config
+C:\Users\USER\Source\Repos\TicTacToeGame\UI\obj\Debug\UI.csproj.CopyComplete
+C:\Users\USER\Source\Repos\TicTacToeGame\UI\obj\Debug\UI.exe
+C:\Users\USER\Source\Repos\TicTacToeGame\UI\obj\Debug\UI.pdb
+C:\Users\USER\source\repos\TicTacToeGame\UI\bin\Debug\Ex02.ConsoleUtils.dll

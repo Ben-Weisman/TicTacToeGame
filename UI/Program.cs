@@ -1,0 +1,17 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace UI
+{
+    class Program
+    {
+        static void Main()
+        {
+            UIManager game = new UIManager();
+            game.StartGame();
+        }
+    }
+}

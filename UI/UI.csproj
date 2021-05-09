@@ -36,12 +36,15 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Enums.cs" />
     <Compile Include="InputOutputHandler.cs" />
+    <Compile Include="PlayerTurnInput.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="UIManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Ex02.ConsoleUtils">
-      <HintPath>..\..\..\..\..\..\Temp\Ex02.ConsoleUtils.dll</HintPath>
+      <HintPath>..\Ex02.ConsoleUtils.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

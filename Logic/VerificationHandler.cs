@@ -9,23 +9,9 @@ namespace Logic
     class VerificationHandler
     {
 
-        public Boolean VerifyMatrixSizeInput(int i_SizeInput)
+        public bool VerifyMatrixSizeInput(int i_SizeInput)
         {
-            bool flag = false;
-            if (int.TryParse(Console.ReadLine(), out int res))
-            {
-                try
-                {
-                    m_Manager.MatrixSideSize = res;
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e.Message);
-                }
-
-            }
-
-            return flag;
+            return (i_SizeInput >= 3 && i_SizeInput <= 9);
         }
     }
 }
