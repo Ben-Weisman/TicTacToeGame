@@ -113,9 +113,9 @@ namespace UI
                 {
                     if (m_GameBoard.CheckCoordinates(numCol, numRow))
                     {
-                        if (eBoardSigns.Blank == m_GameBoard.GetSignOfCell(numCol - 1, numRow - 1))
+                        if (eBoardSigns.Blank == m_GameBoard.GetSignOfCell(numCol, numRow))
                         {
-                            m_GameBoard.MarkCell(i_Sign, numCol - 1, numRow - 1);
+                            m_GameBoard.MarkCell(i_Sign, numCol, numRow);
                             Ex02.ConsoleUtils.Screen.Clear();
                             CreateBoard();
                             valid = true;
@@ -202,7 +202,7 @@ namespace UI
                 m_InputOutput.DeclareGameResult(io_Status);
                 endConditionMet = true;
             }
-            else if (m_Game.CheckForLoser(io_PlayerTurnInfo.CellColumn-1, io_PlayerTurnInfo.CellRow-1, i_Sign))
+            else if (m_Game.CheckForLoser(io_PlayerTurnInfo.CellColumn, io_PlayerTurnInfo.CellRow, i_Sign))
             {
                 if (i_Sign.Equals(eBoardSigns.X))
                 {

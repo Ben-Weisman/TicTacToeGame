@@ -85,10 +85,9 @@ namespace UI
         public void AskPlayerForChosenCell(ref PlayerTurnInfo io_PlayerTurnInput)
         {
             bool valid = false;
-            //TODO: In what format the coordinated are entered? Should tell the user how to enter. 
             while (!valid)
             {
-                Console.WriteLine("Enter the number of row and then column of the chosen cell. You can quit anytime by pressing 'q'");
+                Console.WriteLine("Enter the number of row, then press enter, and enter column of the chosen cell. You can quit anytime by pressing 'q'");
                 string input = Console.ReadLine();
                 if (int.TryParse(input, out int cellRow))
                 {
@@ -96,8 +95,8 @@ namespace UI
                     if (int.TryParse(input, out int cellColumn))
                     {
                         valid = true;
-                        io_PlayerTurnInput.CellRow = cellRow;
-                        io_PlayerTurnInput.CellColumn = cellColumn;
+                        io_PlayerTurnInput.CellRow = cellRow-1;
+                        io_PlayerTurnInput.CellColumn = cellColumn-1;
                     }
                     else if (char.TryParse(input, out char quitGameMark))
                     {
@@ -137,20 +136,20 @@ namespace UI
         }
 
         public void DeclareGameResult(eEndGameStatus i_Status)
-        { // TODO: Should be switch(EndGameStatus) statement. Plus enum type should start with e: eEndGameStatus
-            if (i_Status == eEndGameStatus.PlayerXQuit)
+        {
+            if(i_Status.Equals(eEndGameStatus.PlayerXQuit))
             {
                 Console.WriteLine("You decided to quit. Player O's score grew by one.");
             }
-            else if (i_Status == eEndGameStatus.PlayerXWon)
+            else if(i_Status.Equals(eEndGameStatus.PlayerXWon))
             {
                 Console.WriteLine("Player X Won!");
             }
-            else if (i_Status == eEndGameStatus.PlayerOWon)
+            else if(i_Status.Equals(eEndGameStatus.PlayerOWon))
             {
                 Console.WriteLine("Player O Won!");
             }
-            else if (i_Status == eEndGameStatus.Tie)
+            else if(i_Status.Equals(eEndGameStatus.Tie))
             {
                 Console.WriteLine("Its a tie!");
             }

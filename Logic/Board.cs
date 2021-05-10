@@ -71,8 +71,8 @@ namespace Logic
 
         public bool CheckCoordinates(int i_ChosenColumn, int i_ChosenRow)
         {
-            bool legalRowNumber = (i_ChosenRow <= MatrixSideSize && i_ChosenRow >= 1) ? true : false;
-            bool legalColumnNumber = (i_ChosenColumn <= MatrixSideSize && i_ChosenColumn >= 1) ? true : false;
+            bool legalRowNumber = (i_ChosenRow <= MatrixSideSize && i_ChosenRow >= 0) ? true : false;
+            bool legalColumnNumber = (i_ChosenColumn <= MatrixSideSize && i_ChosenColumn >= 0) ? true : false;
             return legalColumnNumber && legalRowNumber;
         }
 

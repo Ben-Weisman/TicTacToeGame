@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Logic
 {
-    public class GameLogic // TODO:Consider changing the class name to TicTacToeGame (It's more like game manager than game logic).
+    public class GameLogic 
     {
         private Player m_PlayerX;
         private Player m_PlayerO;
