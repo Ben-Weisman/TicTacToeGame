@@ -1,6 +1,5 @@
 C:\Users\USER\source\repos\B21 Ex2 Ben 311454284 Dor 208392233\Logic\obj\Debug\Logic.csprojAssemblyReference.cache
 C:\Users\USER\source\repos\B21 Ex2 Ben 311454284 Dor 208392233\Logic\obj\Debug\Logic.csproj.CoreCompileInputs.cache
-C:\Users\USER\Source\Repos\TicTacToeGame\Logic\obj\Debug\Logic.csprojAssemblyReference.cache
 C:\Users\USER\Source\Repos\TicTacToeGame\Logic\obj\Debug\Logic.csproj.CoreCompileInputs.cache
 C:\Users\USER\Source\Repos\TicTacToeGame\Logic\bin\Debug\Logic.dll.config
 C:\Users\USER\Source\Repos\TicTacToeGame\Logic\bin\Debug\Logic.dll
@@ -12,3 +11,4 @@ C:\Users\USER\source\repos\B21 Ex2 Ben 311454284 Dor 208392233\Logic\bin\Debug\L
 C:\Users\USER\source\repos\B21 Ex2 Ben 311454284 Dor 208392233\Logic\bin\Debug\Logic.pdb
 C:\Users\USER\source\repos\B21 Ex2 Ben 311454284 Dor 208392233\Logic\obj\Debug\Logic.dll
 C:\Users\USER\source\repos\B21 Ex2 Ben 311454284 Dor 208392233\Logic\obj\Debug\Logic.pdb
+C:\Users\USER\source\repos\TicTacToeGame\Logic\obj\Debug\Logic.csprojAssemblyReference.cache

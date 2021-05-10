@@ -19,7 +19,14 @@ namespace UI
                 string input = Console.ReadLine();
                 if (int.TryParse(input, out userInput))
                 {
-                    valid = true;
+                    if (userInput >= 3 && userInput <= 9)
+                    {
+                        valid = true;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Illegal board Size.");
+                    }
                 }
                 else
                 {
@@ -30,7 +37,7 @@ namespace UI
             return userInput;
         }
 
-        public char AskForOpponentType()
+        public char AskForPlayerOType()
         {
             char opponentType = '\0';
             bool valid = false;
@@ -75,7 +82,7 @@ namespace UI
             return answer;
         }
 
-        public void AskPlayerForChosenCell(ref PlayerTurnInput io_PlayerTurnInput)
+        public void AskPlayerForChosenCell(ref PlayerTurnInfo io_PlayerTurnInput)
         {
             bool valid = false;
             //TODO: In what format the coordinated are entered? Should tell the user how to enter. 
@@ -86,11 +93,11 @@ namespace UI
                 if (int.TryParse(input, out int cellRow))
                 {
                     input = Console.ReadLine();
-                    if (int.TryParse(input, out int cellCulomn))
+                    if (int.TryParse(input, out int cellColumn))
                     {
                         valid = true;
                         io_PlayerTurnInput.CellRow = cellRow;
-                        io_PlayerTurnInput.CellColumn = cellCulomn;
+                        io_PlayerTurnInput.CellColumn = cellColumn;
                     }
                     else if (char.TryParse(input, out char quitGameMark))
                     {
@@ -129,21 +136,21 @@ namespace UI
             }
         }
 
-        public void DeclareGameResult(EndGameStatus i_Status)
+        public void DeclareGameResult(eEndGameStatus i_Status)
         { // TODO: Should be switch(EndGameStatus) statement. Plus enum type should start with e: eEndGameStatus
-            if (i_Status == EndGameStatus.UserQuit)
+            if (i_Status == eEndGameStatus.PlayerXQuit)
             {
-                Console.WriteLine("You decided to quit. Opponent's score grew by one.");
+                Console.WriteLine("You decided to quit. Player O's score grew by one.");
             }
-            else if (i_Status == EndGameStatus.UserWon)
+            else if (i_Status == eEndGameStatus.PlayerXWon)
             {
-                Console.WriteLine("You Won!");
+                Console.WriteLine("Player X Won!");
             }
-            else if (i_Status == EndGameStatus.OpponentWon)
+            else if (i_Status == eEndGameStatus.PlayerOWon)
             {
-                Console.WriteLine("Opponent Won!");
+                Console.WriteLine("Player O Won!");
             }
-            else if (i_Status == EndGameStatus.Tie)
+            else if (i_Status == eEndGameStatus.Tie)
             {
                 Console.WriteLine("Its a tie!");
             }
@@ -159,9 +166,9 @@ namespace UI
             Console.WriteLine("Chosen coordinates are out of the board borders.");
         }
 
-        public void ShowScores(Player i_Player1, Player i_Player2)
+        public void ShowScores(Player i_PlayerX, Player i_PlayerO)
         {
-            Console.WriteLine("Score Board: Player 1-> {0} , Player 2-> {1}",i_Player1.Score, i_Player2.Score);
+            Console.WriteLine("Score Board: Player X-> {0} , Player O-> {1}",i_PlayerX.Score, i_PlayerO.Score);
         }
         public void InvalidInput()
         {

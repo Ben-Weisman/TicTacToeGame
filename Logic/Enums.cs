@@ -8,6 +8,11 @@ using System.Threading.Tasks;
 
 namespace Logic
 {
+    public enum ePlayerType
+    {
+        Computer,
+        Human
+    }
 
     public enum eBoardSigns
     {

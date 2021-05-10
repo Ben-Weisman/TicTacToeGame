@@ -9,17 +9,20 @@ namespace Logic
 {
     public class Player
     {
-        private readonly eBoardSigns m_Sign;
-        private int m_score;
-        public int Score
+        public eBoardSigns Sign { get; }
+        public int Score { get; set; }
+        public ePlayerType PlayerType { get; set; }
+
+        public Player(eBoardSigns i_DesiredSign, ePlayerType i_PlayerType)
         {
-            get;
-            set;
+            this.Sign = i_DesiredSign;
+            this.PlayerType = i_PlayerType;
+            this.Score = 0;
         }
-        public Player(eBoardSigns i_DesiredSign)
+
+        public void IncreaseScoreByOne()
         {
-            this.m_Sign = i_DesiredSign;
-            Score = 0;
+            Score += 1;
         }
     }
 }

@@ -9,13 +9,19 @@ namespace Logic
     public class Board
     {
 
-        private eBoardSigns[,] m_Board;
-        private int m_BoardSideSize;
-        private int m_NumberOfBlankCells;
+        public readonly eBoardSigns[,] m_Board;
+
+        public eBoardSigns[,] GetBoard()
+        {
+            return m_Board;
+        }
+
+        public int MatrixSideSize { get; set; } 
+        public int NumberOfBlankCells { get; set; }
 
         public Board(int i_NumColumns, int i_NumRows)
         {
-            m_Board = new eBoardSigns[i_NumRows, i_NumColumns];
+            this.m_Board = new eBoardSigns[i_NumRows, i_NumColumns];
             for (int i = 0; i < i_NumRows; i++)
             {
                 for (int j = 0; j < i_NumColumns; j++)
@@ -25,31 +31,19 @@ namespace Logic
             }
 
             this.MatrixSideSize = i_NumColumns;
-            m_NumberOfBlankCells = i_NumColumns * i_NumRows;
+            this.NumberOfBlankCells = i_NumColumns * i_NumRows;
         }
-
-        public int MatrixSideSize
-        {
-            get;
-            set;
-        }
-        public int NumberOfBlankCells
-        {
-            get;
-            set;
-        }
-
 
         public bool MarkCell(eBoardSigns i_Sign, int i_NumColumns, int i_NumRows)
         {
 
             bool res = false;
 
-            if (m_Board[i_NumColumns, i_NumRows].Equals(eBoardSigns.Blank))
+            if (m_Board[i_NumRows, i_NumColumns].Equals(eBoardSigns.Blank))
             {
-                this.m_Board[i_NumColumns, i_NumRows] = i_Sign;
+                m_Board[i_NumRows, i_NumColumns] = i_Sign;
                 res = true;
-                m_NumberOfBlankCells--;
+                NumberOfBlankCells--;
             }
 
             return res;
@@ -62,34 +56,30 @@ namespace Logic
             {
                 for (int j = 0; j < sideSize; j++)
                 {
-                    clearCell(i, j);
+                    ClearCell(i, j);
                 }
             }
+
+            NumberOfBlankCells = MatrixSideSize * MatrixSideSize;
         }
 
-        private void clearCell(int i_NumColumns, int i_NumRows)
+        private void ClearCell(int i_NumColumns, int i_NumRows)
         {
-            this.m_Board[i_NumColumns, i_NumRows] = eBoardSigns.Blank;
-            m_NumberOfBlankCells++;
+            this.m_Board[i_NumRows, i_NumColumns] = eBoardSigns.Blank;
+            NumberOfBlankCells++;
         }
 
         public bool CheckCoordinates(int i_ChosenColumn, int i_ChosenRow)
         {
-            bool legalRowNumber = (i_ChosenRow <= m_BoardSideSize && i_ChosenRow >= 1) ? true : false;
-            bool legalColumnNumber = (i_ChosenColumn <= m_BoardSideSize && i_ChosenColumn >= 1) ? true : false;
+            bool legalRowNumber = (i_ChosenRow <= MatrixSideSize && i_ChosenRow >= 1) ? true : false;
+            bool legalColumnNumber = (i_ChosenColumn <= MatrixSideSize && i_ChosenColumn >= 1) ? true : false;
             return legalColumnNumber && legalRowNumber;
         }
 
 
         public eBoardSigns GetSignOfCell(int i_NumColumns, int i_NumRows)
         {
-            return this.m_Board[i_NumColumns, i_NumRows];
-        }
-
-
-        public eBoardSigns[,] GetBoard()
-        {
-            return m_Board;
+            return this.m_Board[i_NumRows, i_NumColumns];
         }
     }
 }

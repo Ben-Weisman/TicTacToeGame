@@ -43,7 +43,7 @@
     <Compile Include="Enums.cs" />
     <Compile Include="GameLogic.cs" />
     <Compile Include="Player.cs" />
-    <Compile Include="VerificationHandler.cs" />
+    <Compile Include="PlayerTurnInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

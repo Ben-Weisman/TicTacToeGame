@@ -10,21 +10,19 @@ namespace UI
     class UIManager
     {
         private GameLogic m_Game;
-        private Player m_Player1;
-        private Player m_Player2;
+        private readonly Player m_PlayerX;
+        private Player m_PlayerO;
         private Board m_GameBoard;
         private readonly InputOutputHandler m_InputOutput;  //check that readonly
-        private StringBuilder m_Board;
-        private PlayerType m_PlayerType;
+        private readonly StringBuilder m_Board;
         private int m_MatrixSideSize;
 
         public UIManager()
         {
-            m_Player1 = new Player(eBoardSigns.X);
-            m_Player2 = new Player(eBoardSigns.O);
-            m_InputOutput = new InputOutputHandler();
-            m_Board = new StringBuilder();
-            m_MatrixSideSize = 0;
+            this.m_PlayerX = new Player(eBoardSigns.X, ePlayerType.Human);
+            this.m_InputOutput = new InputOutputHandler();
+            this.m_Board = new StringBuilder();
+            this.m_MatrixSideSize = 0;
         }
 
         public void StartGame()
@@ -37,74 +35,85 @@ namespace UI
         {
             m_MatrixSideSize = m_InputOutput.AskForMatrixSize();
             m_GameBoard = new Board(m_MatrixSideSize, m_MatrixSideSize);
-            m_Game = new GameLogic(m_GameBoard, m_Player1, m_Player2);
-            m_PlayerType = GetOpponentType();
+            ePlayerType PlayerOType = GetOpponentType();
+            m_PlayerO = new Player(eBoardSigns.O, PlayerOType);
+            m_Game = new GameLogic(m_GameBoard, m_PlayerX, m_PlayerO);
         }
-        
+
         public void GameManager()
         {
-            EndGameStatus gameStatus;
-            PlayerAnswer playerAnswer = PlayerAnswer.Yes;
+            ePlayerAnswer playerAnswer = ePlayerAnswer.Yes;
 
-            while (playerAnswer == PlayerAnswer.Yes)
+            while (playerAnswer.Equals(ePlayerAnswer.Yes))
             {
-                gameStatus = PlayingGame();
-                if (gameStatus == EndGameStatus.UserWon)
+                eEndGameStatus gameStatus = PlayingGame();
+                if (gameStatus.Equals(eEndGameStatus.PlayerXWon))
                 {
-                    m_Player1.Score += 1;
+                    m_PlayerX.IncreaseScoreByOne();
                 }
-                else if (gameStatus == (EndGameStatus.OpponentWon | EndGameStatus.UserQuit))
+                else if (gameStatus.Equals(eEndGameStatus.PlayerOWon) ||
+                         gameStatus.Equals(eEndGameStatus.PlayerXQuit))
                 {
-                    m_Player2.Score += 1;
+                    m_PlayerO.IncreaseScoreByOne();
                 }
                 m_GameBoard.ClearBoard();
-                m_InputOutput.ShowScores(m_Player1, m_Player2);
+                m_InputOutput.ShowScores(m_PlayerX, m_PlayerO);
                 playerAnswer = PlayAgain();
             }
-            //exit(0);
         }
-        public EndGameStatus PlayingGame()
+        public eEndGameStatus PlayingGame()
         {
-            EndGameStatus status = 0;
+            eEndGameStatus status = 0;
             bool endCondition = false;
-            PlayerTurnInput playerTurnInput = new PlayerTurnInput();
+            PlayerTurnInfo io_PlayerTurnInfo = new PlayerTurnInfo();
+            Ex02.ConsoleUtils.Screen.Clear();
             CreateBoard();
             while (!endCondition)
             {
-                HumanPlayerTurn(eBoardSigns.X, ref playerTurnInput, ref status);
-                endCondition = FindEndConditions(playerTurnInput, ref status, eBoardSigns.X);
-                if (endCondition) { break; }
-                if (m_PlayerType == PlayerType.Human)
+                io_PlayerTurnInfo = PlayerTurn(m_PlayerX, ref status);
+                endCondition = FindEndConditions(io_PlayerTurnInfo, ref status, eBoardSigns.X);
+                if (!endCondition)
                 {
-                    HumanPlayerTurn(eBoardSigns.O, ref playerTurnInput, ref status);
+                    io_PlayerTurnInfo = PlayerTurn(m_PlayerO, ref status);
+                    endCondition = FindEndConditions(io_PlayerTurnInfo, ref status, eBoardSigns.O);
                 }
-                else
-                {
-                    ComputerPlayerTurn(eBoardSigns.O, ref playerTurnInput);
-                }
-                endCondition = FindEndConditions(playerTurnInput, ref status, eBoardSigns.O);
             }
             return status;
         }
 
-        public void HumanPlayerTurn(eBoardSigns i_Sign, ref PlayerTurnInput io_PlayerTurnInput, ref EndGameStatus io_Status)
+        public PlayerTurnInfo PlayerTurn(Player i_Player, ref eEndGameStatus io_Status)
+        {
+            PlayerTurnInfo input = new PlayerTurnInfo();
+            if (i_Player.PlayerType.Equals(ePlayerType.Human))
+            {
+                HumanPlayerTurn(i_Player.Sign, ref input, ref io_Status);
+            }
+            if (i_Player.PlayerType.Equals(ePlayerType.Computer))
+            {
+                ComputerPlayerTurn(i_Player.Sign, ref input);
+            }
+
+            return input;
+        }
+
+        private void HumanPlayerTurn(eBoardSigns i_Sign, ref PlayerTurnInfo io_PlayerTurnInfo, ref eEndGameStatus io_Status)
         {
             bool valid = false;
             while (!valid)
             {
-                m_InputOutput.AskPlayerForChosenCell(ref io_PlayerTurnInput);
-                int numRow = io_PlayerTurnInput.CellRow;
-                int numCol = io_PlayerTurnInput.CellColumn;
-                if (io_PlayerTurnInput.PlayerWantsToQuit)
+                m_InputOutput.AskPlayerForChosenCell(ref io_PlayerTurnInfo);
+                int numRow = io_PlayerTurnInfo.CellRow;
+                int numCol = io_PlayerTurnInfo.CellColumn;
+                if (io_PlayerTurnInfo.PlayerWantsToQuit)
                 {
-                    io_Status = EndGameStatus.UserQuit;
+                    io_Status = eEndGameStatus.PlayerXQuit;
                     valid = true;
                 }
                 else
                 {
-                    if (eBoardSigns.Blank == m_GameBoard.GetSignOfCell(numCol - 1, numRow - 1))
+                    if (m_GameBoard.CheckCoordinates(numCol, numRow))
                     {
-                        if (!m_GameBoard.CheckCoordinates(numCol - 1, numRow - 1))
+                        if (eBoardSigns.Blank == m_GameBoard.GetSignOfCell(numCol - 1, numRow - 1))
                         {
                             m_GameBoard.MarkCell(i_Sign, numCol - 1, numRow - 1);
                             Ex02.ConsoleUtils.Screen.Clear();
@@ -113,39 +122,39 @@ namespace UI
                         }
                         else
                         {
-                            m_InputOutput.InvalidChosenCoordinates();
+                            m_InputOutput.OccupiedCell(numCol, numRow);
                         }
                     }
                     else
                     {
-                        m_InputOutput.OccupiedCell(numCol, numRow);
+                        m_InputOutput.InvalidChosenCoordinates();
                     }
                 }
             }
         }
 
-        public void ComputerPlayerTurn(eBoardSigns i_Sign, ref PlayerTurnInput io_PlayerTurnInput)
+        private void ComputerPlayerTurn(eBoardSigns i_Sign, ref PlayerTurnInfo io_PlayerTurnInfo)
         {
-            m_Game.GenerateComputerMove(i_Sign);
+            io_PlayerTurnInfo = m_Game.GenerateComputerMove(i_Sign);
             Ex02.ConsoleUtils.Screen.Clear();
             CreateBoard();
         }
 
-        public PlayerAnswer PlayAgain()
+        public ePlayerAnswer PlayAgain()
         {
             bool valid = false;
-            PlayerAnswer playerAnswer = 0;
+            ePlayerAnswer playerAnswer = 0;
             while (!valid)
             {
                 char answer = m_InputOutput.AskForPlayingAgain();
                 if (answer == 'y')
                 {
-                    playerAnswer = PlayerAnswer.Yes;
+                    playerAnswer = ePlayerAnswer.Yes;
                     valid = true;
                 }
                 else if (answer == 'n')
                 {
-                    playerAnswer = PlayerAnswer.No;
+                    playerAnswer = ePlayerAnswer.No;
                     valid = true;
                 }
                 else
@@ -157,22 +166,22 @@ namespace UI
             return playerAnswer;
         }
 
-        public PlayerType GetOpponentType()
+        public ePlayerType GetOpponentType()
         {
             bool valid = false;
-            PlayerType opponentType = 0;
+            ePlayerType opponentType = 0;
 
             while (!valid)
             {
-                char playerInput = m_InputOutput.AskForOpponentType();
+                char playerInput = m_InputOutput.AskForPlayerOType();
                 if (playerInput == 'h')
                 {
-                    opponentType = PlayerType.Human;
+                    opponentType = ePlayerType.Human;
                     valid = true;
                 }
                 else if (playerInput == 'c')
                 {
-                    opponentType = PlayerType.Computer;
+                    opponentType = ePlayerType.Computer;
                     valid = true;
                 }
                 else
@@ -184,34 +193,34 @@ namespace UI
             return opponentType;
         }
 
-        public bool FindEndConditions(PlayerTurnInput io_PlayerTurnInput, ref EndGameStatus io_Status, eBoardSigns i_Sign)
+        public bool FindEndConditions(PlayerTurnInfo io_PlayerTurnInfo, ref eEndGameStatus io_Status, eBoardSigns i_Sign)
         {
             bool endConditionMet = false;
-            if (io_PlayerTurnInput.PlayerWantsToQuit)
+            if (io_PlayerTurnInfo.PlayerWantsToQuit)
             {
+                io_Status = eEndGameStatus.PlayerXQuit;
                 m_InputOutput.DeclareGameResult(io_Status);
-                io_Status = EndGameStatus.UserQuit;
                 endConditionMet = true;
             }
-            else if (m_Game.CheckForWinner(io_PlayerTurnInput.CellColumn-1, io_PlayerTurnInput.CellRow-1, i_Sign))
+            else if (m_Game.CheckForLoser(io_PlayerTurnInfo.CellColumn-1, io_PlayerTurnInfo.CellRow-1, i_Sign))
             {
-                if (i_Sign == eBoardSigns.X)
+                if (i_Sign.Equals(eBoardSigns.X))
                 {
+                    io_Status = eEndGameStatus.PlayerOWon;
                     m_InputOutput.DeclareGameResult(io_Status);
-                    io_Status = EndGameStatus.UserWon;
                     endConditionMet = true;
                 }
-                else if (i_Sign == eBoardSigns.O)
+                else if (i_Sign.Equals(eBoardSigns.O))
                 {
+                    io_Status = eEndGameStatus.PlayerXWon;
                     m_InputOutput.DeclareGameResult(io_Status);
-                    io_Status = EndGameStatus.OpponentWon;
                     endConditionMet = true;
                 }
             }
             else if (m_Game.CheckIfBoardFilled())
             {
+                io_Status = eEndGameStatus.Tie;
                 m_InputOutput.DeclareGameResult(io_Status);
-                io_Status = EndGameStatus.Tie;
                 endConditionMet = true;
             }
 
