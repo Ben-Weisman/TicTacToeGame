@@ -20,7 +20,7 @@ namespace Logic
             this.m_p2 = i_P2;
         }
 
-        public bool CheckForWinner(int i_ColumnChosen, int i_RowChosen, eBoardSigns i_MarkedSign)
+        public bool CheckForLoser(int i_ColumnChosen, int i_RowChosen, eBoardSigns i_MarkedSign)
         {
             return (checkForSequenceInColumn(i_ColumnChosen, i_MarkedSign)
                     || checkForSequenceInRow(i_RowChosen, i_MarkedSign) || checkForSequenceInDiagonals(i_MarkedSign));
@@ -98,7 +98,8 @@ namespace Logic
             {
                 keepTrying = false;
             }
-            do
+
+            while(keepTrying)
             {
                 generatedColumn = rand.Next(0, m_GameBoard.MatrixSideSize);
                 generatedRow = rand.Next(0, m_GameBoard.MatrixSideSize);
@@ -108,9 +109,6 @@ namespace Logic
                     keepTrying = false;
                 }
             }
-            while (keepTrying);
-
-
             return succeededGeneratingMove;
         }
 

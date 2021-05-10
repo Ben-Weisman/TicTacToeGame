@@ -7,3 +7,8 @@ C:\Users\USER\Source\Repos\TicTacToeGame\Logic\bin\Debug\Logic.dll
 C:\Users\USER\Source\Repos\TicTacToeGame\Logic\bin\Debug\Logic.pdb
 C:\Users\USER\Source\Repos\TicTacToeGame\Logic\obj\Debug\Logic.dll
 C:\Users\USER\Source\Repos\TicTacToeGame\Logic\obj\Debug\Logic.pdb
+C:\Users\USER\source\repos\B21 Ex2 Ben 311454284 Dor 208392233\Logic\bin\Debug\Logic.dll.config
+C:\Users\USER\source\repos\B21 Ex2 Ben 311454284 Dor 208392233\Logic\bin\Debug\Logic.dll
+C:\Users\USER\source\repos\B21 Ex2 Ben 311454284 Dor 208392233\Logic\bin\Debug\Logic.pdb
+C:\Users\USER\source\repos\B21 Ex2 Ben 311454284 Dor 208392233\Logic\obj\Debug\Logic.dll
+C:\Users\USER\source\repos\B21 Ex2 Ben 311454284 Dor 208392233\Logic\obj\Debug\Logic.pdb
