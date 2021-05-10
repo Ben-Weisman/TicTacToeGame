@@ -40,7 +40,7 @@ namespace UI
             m_Game = new GameLogic(m_GameBoard, m_Player1, m_Player2);
             m_PlayerType = GetOpponentType();
         }
-
+        
         public void GameManager()
         {
             EndGameStatus gameStatus;
