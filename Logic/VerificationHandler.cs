@@ -8,7 +8,6 @@ namespace Logic
 {
     class VerificationHandler
     {
-
         public bool VerifyMatrixSizeInput(int i_SizeInput)
         {
             return (i_SizeInput >= 3 && i_SizeInput <= 9);

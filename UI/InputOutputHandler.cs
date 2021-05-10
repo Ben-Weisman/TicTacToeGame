@@ -85,6 +85,7 @@ namespace UI
                 string input = Console.ReadLine();
                 if (int.TryParse(input, out int cellRow))
                 {
+                    input = Console.ReadLine();
                     if (int.TryParse(input, out int cellCulomn))
                     {
                         valid = true;
@@ -151,6 +152,11 @@ namespace UI
         public void OccupiedCell(int i_NumCol, int i_NumRow)
         {
             Console.WriteLine("The cell in row: {0}, column: {1} is occupied.", i_NumRow, i_NumCol);
+        }
+
+        public void InvalidChosenCoordinates()
+        {
+            Console.WriteLine("Chosen coordinates are out of the board borders.");
         }
 
         public void ShowScores(Player i_Player1, Player i_Player2)

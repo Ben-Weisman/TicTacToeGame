@@ -53,16 +53,6 @@ namespace Logic
             }
 
             return res;
-
-
-            /*if (i_Sign == 'O' || i_Sign == 'X')
-            {
-                this.m_Board[i_NumColumns, i_NumRows] = i_Sign;
-            }
-            else
-            {
-                throw new Exception("Illegal sign entered.");
-            }*/
         }
 
         public void ClearBoard()
@@ -82,6 +72,14 @@ namespace Logic
             this.m_Board[i_NumColumns, i_NumRows] = eBoardSigns.Blank;
             m_NumberOfBlankCells++;
         }
+
+        public bool CheckCoordinates(int i_ChosenColumn, int i_ChosenRow)
+        {
+            bool legalRowNumber = (i_ChosenRow <= m_BoardSideSize && i_ChosenRow >= 1) ? true : false;
+            bool legalColumnNumber = (i_ChosenColumn <= m_BoardSideSize && i_ChosenColumn >= 1) ? true : false;
+            return legalColumnNumber && legalRowNumber;
+        }
+
 
         public eBoardSigns GetSignOfCell(int i_NumColumns, int i_NumRows)
         {

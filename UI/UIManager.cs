@@ -89,24 +89,32 @@ namespace UI
 
         public void HumanPlayerTurn(eBoardSigns i_Sign, ref PlayerTurnInput io_PlayerTurnInput, ref EndGameStatus io_Status)
         {
-            m_InputOutput.AskPlayerForChosenCell(ref io_PlayerTurnInput);
-            int numRow = io_PlayerTurnInput.CellRow;
-            int numCol = io_PlayerTurnInput.CellColumn;
-            if (io_PlayerTurnInput.PlayerWantsToQuit)
+            bool valid = false;
+            while (!valid)
             {
-                io_Status = EndGameStatus.UserQuit;
-            }
-            else
-            {
-                bool valid = false;
-                while (!valid)
+                m_InputOutput.AskPlayerForChosenCell(ref io_PlayerTurnInput);
+                int numRow = io_PlayerTurnInput.CellRow;
+                int numCol = io_PlayerTurnInput.CellColumn;
+                if (io_PlayerTurnInput.PlayerWantsToQuit)
+                {
+                    io_Status = EndGameStatus.UserQuit;
+                    valid = true;
+                }
+                else
                 {
                     if (eBoardSigns.Blank == m_GameBoard.GetSignOfCell(numCol - 1, numRow - 1))
                     {
-                        m_GameBoard.MarkCell(i_Sign, numCol - 1, numRow - 1);
-                        Console.Clear(); //*
-                        CreateBoard();
-                        valid = true;
+                        if (!m_GameBoard.CheckCoordinates(numCol - 1, numRow - 1))
+                        {
+                            m_GameBoard.MarkCell(i_Sign, numCol - 1, numRow - 1);
+                            Ex02.ConsoleUtils.Screen.Clear();
+                            CreateBoard();
+                            valid = true;
+                        }
+                        else
+                        {
+                            m_InputOutput.InvalidChosenCoordinates();
+                        }
                     }
                     else
                     {
@@ -119,7 +127,7 @@ namespace UI
         public void ComputerPlayerTurn(eBoardSigns i_Sign, ref PlayerTurnInput io_PlayerTurnInput)
         {
             m_Game.GenerateComputerMove(i_Sign);
-            Console.Clear(); //*
+            Ex02.ConsoleUtils.Screen.Clear();
             CreateBoard();
         }
 
@@ -248,11 +256,13 @@ namespace UI
             {
                 if (i != 0)
                 {
-                    m_Board.AppendFormat("| {0} ", m_GameBoard.GetSignOfCell(i, i_RowNumber));
+                    char value = (char)m_GameBoard.GetSignOfCell(i, i_RowNumber);
+                    m_Board.AppendFormat("| {0} ", value);
                 }
                 else
                 {
-                    m_Board.AppendFormat(" {0} ", m_GameBoard.GetSignOfCell(i, i_RowNumber));
+                    char value = (char)m_GameBoard.GetSignOfCell(i, i_RowNumber);
+                    m_Board.AppendFormat(" {0} ", value);
                 }
             }
 
