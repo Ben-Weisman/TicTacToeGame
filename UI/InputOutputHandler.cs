@@ -85,7 +85,7 @@ namespace UI
         public void AskPlayerForChosenCell(ref PlayerTurnInfo io_PlayerTurnInput)
         {
             bool valid = false;
-            //TODO: In what format the coordinated are entered? Should tell the user how to enter. 
+            
             while (!valid)
             {
                 Console.WriteLine("Enter the number of row and then column of the chosen cell. You can quit anytime by pressing 'q'");
@@ -96,8 +96,8 @@ namespace UI
                     if (int.TryParse(input, out int cellColumn))
                     {
                         valid = true;
-                        io_PlayerTurnInput.CellRow = cellRow;
-                        io_PlayerTurnInput.CellColumn = cellColumn;
+                        io_PlayerTurnInput.CellRow = cellRow-1;
+                        io_PlayerTurnInput.CellColumn = cellColumn-1;
                     }
                     else if (char.TryParse(input, out char quitGameMark))
                     {
@@ -137,7 +137,7 @@ namespace UI
         }
 
         public void DeclareGameResult(eEndGameStatus i_Status)
-        { // TODO: Should be switch(EndGameStatus) statement. Plus enum type should start with e: eEndGameStatus
+        { 
             if (i_Status == eEndGameStatus.PlayerXQuit)
             {
                 Console.WriteLine("You decided to quit. Player O's score grew by one.");

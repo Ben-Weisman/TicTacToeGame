@@ -65,35 +65,35 @@ namespace UI
         {
             eEndGameStatus status = 0;
             bool endCondition = false;
-            PlayerTurnInfo io_PlayerTurnInfo = new PlayerTurnInfo();
+            PlayerTurnInfo playerTurnInfo = new PlayerTurnInfo();
             Ex02.ConsoleUtils.Screen.Clear();
             CreateBoard();
             while (!endCondition)
             {
-                io_PlayerTurnInfo = PlayerTurn(m_PlayerX, ref status);
-                endCondition = FindEndConditions(io_PlayerTurnInfo, ref status, eBoardSigns.X);
+                PlayerTurn(m_PlayerX, ref status, ref playerTurnInfo);
+                endCondition = FindEndConditions(playerTurnInfo, ref status, eBoardSigns.X);
                 if (!endCondition)
                 {
-                    io_PlayerTurnInfo = PlayerTurn(m_PlayerO, ref status);
-                    endCondition = FindEndConditions(io_PlayerTurnInfo, ref status, eBoardSigns.O);
+                    PlayerTurn(m_PlayerO, ref status, ref playerTurnInfo);
+                    endCondition = FindEndConditions(playerTurnInfo, ref status, eBoardSigns.O);
                 }
             }
             return status;
         }
 
-        public PlayerTurnInfo PlayerTurn(Player i_Player, ref eEndGameStatus io_Status)
+        public void PlayerTurn(Player i_Player, ref eEndGameStatus io_Status, ref PlayerTurnInfo io_PrevTurnInfo)
         {
-            PlayerTurnInfo input = new PlayerTurnInfo();
+            PlayerTurnInfo currentTurnInfo = new PlayerTurnInfo();
             if (i_Player.PlayerType.Equals(ePlayerType.Human))
             {
-                HumanPlayerTurn(i_Player.Sign, ref input, ref io_Status);
+                HumanPlayerTurn(i_Player.Sign, ref currentTurnInfo, ref io_Status);
+                io_PrevTurnInfo = currentTurnInfo;
             }
             if (i_Player.PlayerType.Equals(ePlayerType.Computer))
             {
-                ComputerPlayerTurn(i_Player.Sign, ref input);
+                ComputerPlayerTurn(i_Player.Sign, ref currentTurnInfo, io_PrevTurnInfo);
             }
 
-            return input;
         }
 
         private void HumanPlayerTurn(eBoardSigns i_Sign, ref PlayerTurnInfo io_PlayerTurnInfo, ref eEndGameStatus io_Status)
@@ -113,9 +113,9 @@ namespace UI
                 {
                     if (m_GameBoard.CheckCoordinates(numCol, numRow))
                     {
-                        if (eBoardSigns.Blank == m_GameBoard.GetSignOfCell(numCol - 1, numRow - 1))
+                        if (eBoardSigns.Blank == m_GameBoard.GetSignOfCell(numCol, numRow))
                         {
-                            m_GameBoard.MarkCell(i_Sign, numCol - 1, numRow - 1);
+                            m_GameBoard.MarkCell(i_Sign, numCol, numRow);
                             Ex02.ConsoleUtils.Screen.Clear();
                             CreateBoard();
                             valid = true;
@@ -133,9 +133,9 @@ namespace UI
             }
         }
 
-        private void ComputerPlayerTurn(eBoardSigns i_Sign, ref PlayerTurnInfo io_PlayerTurnInfo)
+        private void ComputerPlayerTurn(eBoardSigns i_Sign, ref PlayerTurnInfo io_CurrentTurnInfo, PlayerTurnInfo i_PrevTurnInfo)
         {
-            io_PlayerTurnInfo = m_Game.GenerateComputerMove(i_Sign);
+            io_CurrentTurnInfo = m_Game.GenerateComputerMove(i_Sign, i_PrevTurnInfo);
             Ex02.ConsoleUtils.Screen.Clear();
             CreateBoard();
         }
@@ -202,7 +202,7 @@ namespace UI
                 m_InputOutput.DeclareGameResult(io_Status);
                 endConditionMet = true;
             }
-            else if (m_Game.CheckForLoser(io_PlayerTurnInfo.CellColumn-1, io_PlayerTurnInfo.CellRow-1, i_Sign))
+            else if (m_Game.CheckForLoser(io_PlayerTurnInfo.CellColumn, io_PlayerTurnInfo.CellRow, i_Sign))
             {
                 if (i_Sign.Equals(eBoardSigns.X))
                 {

@@ -63,7 +63,7 @@ namespace Logic
             NumberOfBlankCells = MatrixSideSize * MatrixSideSize;
         }
 
-        private void ClearCell(int i_NumColumns, int i_NumRows)
+        public void ClearCell(int i_NumColumns, int i_NumRows)
         {
             this.m_Board[i_NumRows, i_NumColumns] = eBoardSigns.Blank;
             NumberOfBlankCells++;
@@ -71,6 +71,8 @@ namespace Logic
 
         public bool CheckCoordinates(int i_ChosenColumn, int i_ChosenRow)
         {
+            i_ChosenColumn += 1; 
+            i_ChosenRow += 1;
             bool legalRowNumber = (i_ChosenRow <= MatrixSideSize && i_ChosenRow >= 1) ? true : false;
             bool legalColumnNumber = (i_ChosenColumn <= MatrixSideSize && i_ChosenColumn >= 1) ? true : false;
             return legalColumnNumber && legalRowNumber;

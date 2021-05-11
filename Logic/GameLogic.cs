@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Logic
 {
-    public class GameLogic // TODO:Consider changing the class name to TicTacToeGame (It's more like game manager than game logic).
+    public class GameLogic 
     {
         private Player m_PlayerX;
         private Player m_PlayerO;
@@ -29,7 +29,7 @@ namespace Logic
         private bool CheckForSequenceInDiagonals(eBoardSigns i_MarkedSign)
         {
             bool foundSequence = true;
-            for (int i = 1; i <= m_GameBoard.MatrixSideSize; i++) // Check main diagonal. 
+            for (int i = 0; i < m_GameBoard.MatrixSideSize; i++) // Check main diagonal. 
             {
                 if (m_GameBoard.GetBoard()[i, i] != i_MarkedSign)
                 {
@@ -85,12 +85,11 @@ namespace Logic
             return result;
         }
 
-        //TODO: Check if multiple booleans are the correct way. Also check efficiency of the while loop.  
-        public PlayerTurnInfo GenerateComputerMove(eBoardSigns i_ComputerSign)
+        
+        public PlayerTurnInfo GenerateComputerMove(eBoardSigns i_ComputerSign, PlayerTurnInfo i_PrevTurnInfo)
         {
             bool keepTrying = true;
             PlayerTurnInfo result = new PlayerTurnInfo();
-            Random rand = new Random();
 
             if (CheckIfBoardFilled())
             {
@@ -100,18 +99,122 @@ namespace Logic
                 result.PlayerWantsToQuit = false;
             }
 
-            while (keepTrying)
+            int boardSideSize = m_GameBoard.MatrixSideSize;
+            if (boardSideSize % 2 == 0)
             {
-                int generatedColumn = rand.Next(0, m_GameBoard.MatrixSideSize);
-                int generatedRow = rand.Next(0, m_GameBoard.MatrixSideSize);
-                if (m_GameBoard.MarkCell(i_ComputerSign, generatedColumn, generatedRow))
+                int symmetricalLine = boardSideSize / 2;
+                result.CellColumn = i_PrevTurnInfo.CellColumn;
+                if (i_PrevTurnInfo.CellRow < symmetricalLine)
                 {
-                    keepTrying = false;
-                    result.CellRow = generatedRow;
-                    result.CellColumn = generatedColumn;
-                    result.PlayerWantsToQuit = false;
+                    result.CellRow = i_PrevTurnInfo.CellRow + symmetricalLine;
+                }
+                else
+                {
+                    result.CellRow = i_PrevTurnInfo.CellRow - symmetricalLine;
+                }
+
+                m_GameBoard.MarkCell(i_ComputerSign, result.CellColumn, result.CellRow);
+            }
+            else
+            {
+                int splittingLine = boardSideSize / 2;
+                int symmetricalLine = splittingLine + 1;
+                if (i_PrevTurnInfo.CellRow < splittingLine)
+                {
+                    result.CellColumn = i_PrevTurnInfo.CellColumn;
+                    result.CellRow = i_PrevTurnInfo.CellRow + symmetricalLine;
+                    if (!m_GameBoard.GetSignOfCell(result.CellColumn, result.CellRow).Equals(eBoardSigns.Blank))
+                    {
+                        result = SmartChooseOfCell(i_ComputerSign);
+                    }
+                    else
+                    {
+                        m_GameBoard.MarkCell(i_ComputerSign, result.CellColumn, result.CellRow);
+                    }
+                }
+                else if (i_PrevTurnInfo.CellRow > splittingLine)
+                {
+                    result.CellColumn = i_PrevTurnInfo.CellColumn;
+                    result.CellRow = i_PrevTurnInfo.CellRow - symmetricalLine;
+                    if (!m_GameBoard.GetSignOfCell(result.CellColumn, result.CellRow).Equals(eBoardSigns.Blank))
+                    {
+                        result = SmartChooseOfCell(i_ComputerSign);
+                    }
+                    else
+                    {
+                        m_GameBoard.MarkCell(i_ComputerSign, result.CellColumn, result.CellRow);
+                    }
+                }
+                else if (i_PrevTurnInfo.CellRow == splittingLine)
+                {
+                    if (i_PrevTurnInfo.CellColumn < splittingLine)
+                    {
+                        result.CellColumn = i_PrevTurnInfo.CellColumn + symmetricalLine;
+                        result.CellRow = i_PrevTurnInfo.CellRow;
+                        if (!m_GameBoard.GetSignOfCell(result.CellColumn, result.CellRow).Equals(eBoardSigns.Blank))
+                        {
+                            result = SmartChooseOfCell(i_ComputerSign);
+                        }
+                        else
+                        {
+                            m_GameBoard.MarkCell(i_ComputerSign, result.CellColumn, result.CellRow);
+                        }
+                    }
+                    else if (i_PrevTurnInfo.CellColumn > splittingLine)
+                    {
+                        result.CellColumn = i_PrevTurnInfo.CellColumn - symmetricalLine;
+                        result.CellRow = i_PrevTurnInfo.CellRow;
+                        if (!m_GameBoard.GetSignOfCell(result.CellColumn, result.CellRow).Equals(eBoardSigns.Blank))
+                        {
+                            result = SmartChooseOfCell(i_ComputerSign);
+                        }
+                        else
+                        {
+                            m_GameBoard.MarkCell(i_ComputerSign, result.CellColumn, result.CellRow);
+                        }
+                    }
+                    else if (i_PrevTurnInfo.CellColumn == splittingLine)
+                    {
+                        result = SmartChooseOfCell(i_ComputerSign);
+                    }
                 }
             }
+
+            return result;
+        }
+
+        private PlayerTurnInfo SmartChooseOfCell(eBoardSigns i_ComputerSign)
+        {
+            bool valid = false;
+            PlayerTurnInfo result=new PlayerTurnInfo();
+
+            while (!valid)
+            {
+                result = ChooseRandomCell();
+                if(m_GameBoard.MarkCell(i_ComputerSign, result.CellColumn, result.CellRow))
+                {
+                    if(CheckForLoser(result.CellColumn, result.CellRow, i_ComputerSign))
+                    {
+                        m_GameBoard.ClearCell(result.CellColumn, result.CellRow);
+                        result = ChooseRandomCell();
+                    }
+                    else
+                    {
+                        valid = true;
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        private PlayerTurnInfo ChooseRandomCell()
+        {
+            PlayerTurnInfo result = new PlayerTurnInfo();
+            Random rand = new Random();
+            result.CellColumn = rand.Next(0, m_GameBoard.MatrixSideSize);
+            result.CellRow = rand.Next(0, m_GameBoard.MatrixSideSize);
+            result.PlayerWantsToQuit = false;
             return result;
         }
 
