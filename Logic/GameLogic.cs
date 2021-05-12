@@ -88,41 +88,34 @@ namespace Logic
         
         public PlayerTurnInfo GenerateComputerMove(eBoardSigns i_ComputerSign, PlayerTurnInfo i_PrevTurnInfo)
         {
-            bool keepTrying = true;
+            
             PlayerTurnInfo result = new PlayerTurnInfo();
-
-            if (CheckIfBoardFilled())
-            {
-                keepTrying = false;
-                result.CellRow = -1;
-                result.CellColumn = -1;
-                result.PlayerWantsToQuit = false;
-            }
-
             int boardSideSize = m_GameBoard.MatrixSideSize;
+            bool isRowTheSymmetricalLine;
+
             if (boardSideSize % 2 == 0)
             {
+                isRowTheSymmetricalLine = true;
                 int symmetricalLine = boardSideSize / 2;
-                result.CellColumn = i_PrevTurnInfo.CellColumn;
                 if (i_PrevTurnInfo.CellRow < symmetricalLine)
                 {
-                    result.CellRow = i_PrevTurnInfo.CellRow + symmetricalLine;
+                    result = SymmetricMove(i_PrevTurnInfo, isRowTheSymmetricalLine);
                 }
                 else
                 {
-                    result.CellRow = i_PrevTurnInfo.CellRow - symmetricalLine;
+                    result = SymmetricMove(i_PrevTurnInfo, isRowTheSymmetricalLine);
                 }
 
                 m_GameBoard.MarkCell(i_ComputerSign, result.CellColumn, result.CellRow);
             }
             else
             {
+                isRowTheSymmetricalLine = true;
                 int splittingLine = boardSideSize / 2;
                 int symmetricalLine = splittingLine + 1;
                 if (i_PrevTurnInfo.CellRow < splittingLine)
                 {
-                    result.CellColumn = i_PrevTurnInfo.CellColumn;
-                    result.CellRow = i_PrevTurnInfo.CellRow + symmetricalLine;
+                    result = SymmetricMove(i_PrevTurnInfo, isRowTheSymmetricalLine);
                     if (!m_GameBoard.GetSignOfCell(result.CellColumn, result.CellRow).Equals(eBoardSigns.Blank))
                     {
                         result = SmartChooseOfCell(i_ComputerSign);
@@ -134,8 +127,7 @@ namespace Logic
                 }
                 else if (i_PrevTurnInfo.CellRow > splittingLine)
                 {
-                    result.CellColumn = i_PrevTurnInfo.CellColumn;
-                    result.CellRow = i_PrevTurnInfo.CellRow - symmetricalLine;
+                    result = SymmetricMove(i_PrevTurnInfo, isRowTheSymmetricalLine);
                     if (!m_GameBoard.GetSignOfCell(result.CellColumn, result.CellRow).Equals(eBoardSigns.Blank))
                     {
                         result = SmartChooseOfCell(i_ComputerSign);
@@ -147,10 +139,10 @@ namespace Logic
                 }
                 else if (i_PrevTurnInfo.CellRow == splittingLine)
                 {
+                    isRowTheSymmetricalLine = false;
                     if (i_PrevTurnInfo.CellColumn < splittingLine)
                     {
-                        result.CellColumn = i_PrevTurnInfo.CellColumn + symmetricalLine;
-                        result.CellRow = i_PrevTurnInfo.CellRow;
+                        result = SymmetricMove(i_PrevTurnInfo, isRowTheSymmetricalLine);
                         if (!m_GameBoard.GetSignOfCell(result.CellColumn, result.CellRow).Equals(eBoardSigns.Blank))
                         {
                             result = SmartChooseOfCell(i_ComputerSign);
@@ -162,8 +154,7 @@ namespace Logic
                     }
                     else if (i_PrevTurnInfo.CellColumn > splittingLine)
                     {
-                        result.CellColumn = i_PrevTurnInfo.CellColumn - symmetricalLine;
-                        result.CellRow = i_PrevTurnInfo.CellRow;
+                        result = SymmetricMove(i_PrevTurnInfo, isRowTheSymmetricalLine);
                         if (!m_GameBoard.GetSignOfCell(result.CellColumn, result.CellRow).Equals(eBoardSigns.Blank))
                         {
                             result = SmartChooseOfCell(i_ComputerSign);
@@ -180,6 +171,23 @@ namespace Logic
                 }
             }
 
+            return result;
+        }
+
+        private PlayerTurnInfo SymmetricMove(PlayerTurnInfo i_PrevTurnInfo, bool i_IsRowTheSymmetricalLine)
+        {
+            int boardSideSize = m_GameBoard.MatrixSideSize;
+            PlayerTurnInfo result = new PlayerTurnInfo();
+            if (i_IsRowTheSymmetricalLine)
+            {
+                result.CellColumn = i_PrevTurnInfo.CellColumn;
+                result.CellRow = boardSideSize - i_PrevTurnInfo.CellRow - 1;
+            }
+            else
+            {
+                result.CellColumn = boardSideSize - i_PrevTurnInfo.CellColumn - 1;
+                result.CellRow = i_PrevTurnInfo.CellRow;
+            }
             return result;
         }
 

@@ -36,7 +36,8 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Enums.cs" />
+    <Compile Include="eEndGameStatus.cs" />
+    <Compile Include="ePlayerAnswer.cs" />
     <Compile Include="InputOutputHandler.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="UIManager.cs" />

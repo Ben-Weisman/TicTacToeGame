@@ -6,14 +6,6 @@ using System.Threading.Tasks;
 
 namespace UI
 {
-    public enum eEndGameStatus
-    {
-        PlayerXWon,
-        PlayerOWon,
-        Tie,
-        PlayerXQuit
-    }
-
     public enum ePlayerAnswer
     {
         Yes,
